@@ -31,11 +31,11 @@ namespace Weasel_Program
 
             char[] characters = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ' };
 
-            int attempts = 15;
+            int attempts = 5;
             int populationSize = 100;
-            float mutationChance = 0.00001f;
-            float increment = 0.00001f;
-            float totalIncrements = 100;
+            float mutationChance = 0.000001f;
+            float increment = 0.000001f;
+            float totalIncrements = 100000;
 
             Dictionary<float, float> averageGenerations = new Dictionary<float, float>();
 
