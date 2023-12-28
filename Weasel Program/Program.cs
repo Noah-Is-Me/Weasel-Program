@@ -31,11 +31,13 @@ namespace Weasel_Program
 
             char[] characters = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ' };
 
-            int attempts = 5;
-            int populationSize = 100;
-            float mutationChance = 0.000001f;
-            float increment = 0.000001f;
-            float totalIncrements = 100000;
+            int attempts = 20;
+            int populationSize = 1;
+            float mutationChance = 0.0001f;
+            float increment = 0.0001f;
+            float totalIncrements = 2500;
+
+            double graphInterval = 0.025;
 
             Dictionary<float, float> averageGenerations = new Dictionary<float, float>();
 
@@ -157,6 +159,7 @@ namespace Weasel_Program
                 CA.AxisY.TitleFont = new Font("Ariel", 15, FontStyle.Bold);
 
                 CA.AxisX.Minimum = 0;
+                CA.AxisX.Interval = graphInterval;
 
                 chart.Titles.Add("Average Generations to Mutation Rate");
                 chart.Titles.ElementAt(0).Font = new Font("Ariel", 15, FontStyle.Bold);
