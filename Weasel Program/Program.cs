@@ -31,13 +31,16 @@ namespace Weasel_Program
 
             char[] characters = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ' };
 
-            int attempts = 20;
+            int attempts = 2;
             int populationSize = 100;
             float mutationChance = 0.0001f;
             float increment = 0.0001f;
             float totalIncrements = 2500;
-
             double graphInterval = 0.025;
+            bool countPercentPositive = true;
+
+            int beneficialMutationCount;
+            bool countedBeneficialMutation;
 
             Dictionary<float, float> averageGenerations = new Dictionary<float, float>();
 
@@ -49,7 +52,7 @@ namespace Weasel_Program
                 for (int n = 0; n < attempts; n++)
                 {
 
-                    
+                    beneficialMutationCount = 0;
                     string[] strings = new string[populationSize];
                     int[] scores = new int[populationSize];
 
@@ -76,6 +79,8 @@ namespace Weasel_Program
                     while (!halt)
                     {
                         generations++;
+                        countedBeneficialMutation = false;
+
                         for (int i = 0; i < strings.Length; i++)
                         {
 
@@ -90,6 +95,11 @@ namespace Weasel_Program
 
                                 if (strings[i][j] == targetString[j])
                                 {
+                                    if (!countedBeneficialMutation)
+                                    {
+                                        countedBeneficialMutation = true;
+                                        beneficialMutationCount++;
+                                    }
                                     scores[i] += 1;
                                 }
                             }
@@ -117,7 +127,12 @@ namespace Weasel_Program
                         //Debug.WriteLine(fittestString);
                     }
 
-                    averageGenerations[mutationChance] += generations;
+                    if (countPercentPositive)
+                    {
+                        averageGenerations[mutationChance] += (float)beneficialMutationCount / (float)generations;
+                    }
+                    else
+                        averageGenerations[mutationChance] += generations;
                 }
 
                 Debug.WriteLine("");
@@ -149,7 +164,10 @@ namespace Weasel_Program
                 chart.BackColor = Color.White;
                 CA.BackColor = Color.White;
 
-                CA.AxisY.Title = "Average Generations";
+                if (countPercentPositive)
+                    CA.AxisY.Title = "Percentage Positive Mutations";
+                else
+                    CA.AxisY.Title = "Average Generations";
                 CA.AxisX.Title = "Mutation Rates (mutations per gene)";
 
                 CA.AxisX.TitleAlignment = StringAlignment.Center;
@@ -161,7 +179,10 @@ namespace Weasel_Program
                 CA.AxisX.Minimum = 0;
                 CA.AxisX.Interval = graphInterval;
 
-                chart.Titles.Add("Average Generations to Mutation Rate (Weasel Program)");
+                if (countPercentPositive)
+                    chart.Titles.Add("Percentage Positve Mutations to Mutation Rate (Weasel Program)");
+                else
+                    chart.Titles.Add("Average Generations to Mutation Rate (Weasel Program)");
                 chart.Titles.ElementAt(0).Font = new Font("Ariel", 15, FontStyle.Bold);
                 chart.Size = new Size(1920, 1080);
                 chart.Series["Average Generations"].BorderWidth = 4;
