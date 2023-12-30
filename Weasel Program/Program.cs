@@ -27,15 +27,15 @@ namespace Weasel_Program
             Random random = new Random();
             Stopwatch stopwatch = new Stopwatch();
 
-            string targetString = "METHINKS IT IS LIKE A WEASEL";
+            string targetString = "METHINKS";
 
             char[] characters = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ' };
 
-            int attempts = 2;
-            int populationSize = 100;
+            int attempts = 5;
+            int populationSize = 500;
             float mutationChance = 0.0001f;
-            float increment = 0.0001f;
-            float totalIncrements = 2500;
+            float increment = 0.001f;
+            float totalIncrements = 250;
             double graphInterval = 0.025;
             bool countPercentPositive = true;
 
@@ -95,11 +95,6 @@ namespace Weasel_Program
 
                                 if (strings[i][j] == targetString[j])
                                 {
-                                    if (!countedBeneficialMutation)
-                                    {
-                                        countedBeneficialMutation = true;
-                                        beneficialMutationCount++;
-                                    }
                                     scores[i] += 1;
                                 }
                             }
@@ -108,6 +103,12 @@ namespace Weasel_Program
                             {
                                 fittestScore = scores[i];
                                 fittestString = strings[i];
+
+                                if (!countedBeneficialMutation)
+                                {
+                                    countedBeneficialMutation = true;
+                                    beneficialMutationCount++;
+                                }
                             }
 
                             if (strings[i] == targetString)
@@ -130,6 +131,9 @@ namespace Weasel_Program
                     if (countPercentPositive)
                     {
                         averageGenerations[mutationChance] += (float)beneficialMutationCount / (float)generations;
+
+                        //Debug.WriteLine(beneficialMutationCount + "; " + generations);
+                        //Debug.WriteLine((float)beneficialMutationCount / (float)generations);
                     }
                     else
                         averageGenerations[mutationChance] += generations;
@@ -180,13 +184,20 @@ namespace Weasel_Program
                 CA.AxisX.Interval = graphInterval;
 
                 if (countPercentPositive)
+                {
+                    chart.Series["Average Generations"].Color = Color.Red;
                     chart.Titles.Add("Percentage Positve Mutations to Mutation Rate (Weasel Program)");
+                }
                 else
+                {
+                    chart.Series["Average Generations"].Color = Color.Blue;
                     chart.Titles.Add("Average Generations to Mutation Rate (Weasel Program)");
+                }
                 chart.Titles.ElementAt(0).Font = new Font("Ariel", 15, FontStyle.Bold);
                 chart.Size = new Size(1920, 1080);
                 chart.Series["Average Generations"].BorderWidth = 4;
-                chart.Series["Average Generations"].Color = Color.Blue;
+
+                
 
                 chart.AntiAliasing = AntiAliasingStyles.Graphics;
                 chart.TextAntiAliasingQuality = TextAntiAliasingQuality.High;
