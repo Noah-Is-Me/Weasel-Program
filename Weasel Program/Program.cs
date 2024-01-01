@@ -27,7 +27,7 @@ namespace Weasel_Program
             Random random = new Random();
             Stopwatch stopwatch = new Stopwatch();
 
-            string targetString = "METHINKS";
+            string targetString = "METHINKS IT IS LIKE A WEASEL";
 
             char[] characters = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ' };
 
@@ -38,6 +38,7 @@ namespace Weasel_Program
             float totalIncrements = 250;
             double graphInterval = 0.025;
             bool countPercentPositive = true;
+            bool showExpectedPercent = true;
 
             int beneficialMutationCount;
             bool countedBeneficialMutation;
@@ -165,6 +166,11 @@ namespace Weasel_Program
                 Series generations = chart.Series.Add("Average Generations");
                 generations.ChartType = SeriesChartType.FastLine;
 
+                Series expected = chart.Series.Add("Expected");
+                expected.ChartType = SeriesChartType.FastLine;
+                expected.Color = Color.CadetBlue;
+                expected.BorderWidth = 3;
+
                 chart.BackColor = Color.White;
                 CA.BackColor = Color.White;
 
@@ -206,6 +212,11 @@ namespace Weasel_Program
                 foreach (KeyValuePair<float, float> dataPoint in data)
                 {
                     chart.Series["Average Generations"].Points.AddXY(Math.Round(dataPoint.Key, 4), dataPoint.Value);
+
+                    if (showExpectedPercent)
+                    {
+                        expected.Points.AddXY(Math.Round(dataPoint.Key, 4), expectedEquation(dataPoint.Key));
+                    }
                 }
 
 
@@ -220,6 +231,25 @@ namespace Weasel_Program
 
                 chart.SaveImage(imagePath, ChartImageFormat.Png);
             }
+
+            double expectedEquation(double m)
+            {
+                double probabilityOfPositiveMutation = 1d / characters.Length;
+
+                double pRootc = populationSize * Math.Sqrt(probabilityOfPositiveMutation);
+                double divisor = 1; // Math.E + (Math.Pow(probabilityOfPositiveMutation, 2) * Math.Pow(populationSize, 1d / Math.E));
+
+                double y = Math.Pow(probabilityOfPositiveMutation, targetString.Length * m / divisor);
+                y *= targetString.Length * m / divisor;
+                y = 1d - y;
+                y = Math.Pow(y, pRootc);
+                y = 1d - y;
+
+                return y;
+
+                // 1d - Math.Pow(1d - (m * Math.Pow(probabilityOfPositiveGermlineMutation, m * individualLength/ Math.E) / Math.E), populationSize);
+            }
+
         }
     }
 }
