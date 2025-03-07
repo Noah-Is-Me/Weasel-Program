@@ -221,7 +221,6 @@ namespace Weasel_Program
 
 
                 string graphInfo = $"Weasel Program {DateTime.Now.ToString("MMM-dd-yyyy hh-mm-ss-fff tt")}";
-                //string imagePath = @"C:\\Users\\Noah Sonfield\\source\\repos\\Graph Test\\Graph Test\\Graphs\\" + graphInfo + ".png";
                 string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
                 string projectDirectory = Directory.GetParent(Directory.GetParent(Directory.GetParent(baseDirectory).FullName).FullName).FullName;
                 string graphsFolderPath = Path.Combine(projectDirectory, "Graphs");
